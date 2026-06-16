@@ -25,78 +25,95 @@ let state = {
   turn: 0,
   max: 36,
   locked: false,
-  history: []
+  history: [],
+  ai: ""
 };
 
-// tek kullanım kontrolü
+// QR → sıra ID üretir
+let queue = [];
 let users = {};
+
+function aiAnalyze(before, after) {
+  if (!before) return "Başlangıç metni oluşturuldu.";
+  if (after.length > before.length) return "Anlam genişledi, ifade zenginleşti.";
+  if (after.length < before.length) return "Metin sadeleşti, yoğunluk azaldı.";
+  return "Anlam dönüşümü gerçekleşti.";
+}
 
 io.on("connection", (socket) => {
 
   socket.emit("state", state);
 
-  // kullanıcı kaydı
-  socket.on("join", (name) => {
-    if (users[name]) {
-      socket.emit("errorMsg", "Bu isim zaten kullanıldı");
-      return;
-    }
+  // QR giriş → otomatik ID
+  socket.on("joinQR", () => {
+    const id = queue.length + 1;
 
-    users[name] = {
-      used: false,
-      id: socket.id
+    queue.push(id);
+    users[socket.id] = {
+      id,
+      used: false
     };
 
-    socket.name = name;
+    socket.emit("assignedID", id);
   });
 
-  // başlat
   socket.on("start", (data) => {
     state = {
       text: data.text,
       turn: 1,
       max: 36,
       locked: false,
-      history: []
+      history: [],
+      ai: ""
     };
 
+    queue = [];
     users = {};
 
     io.emit("state", state);
   });
 
-  // update
   socket.on("update", (data) => {
 
-    const user = socket.name;
+    const user = users[socket.id];
     if (!user) return;
 
-    if (users[user].used) {
+    // sıra kontrolü
+    if (user.id !== state.turn) {
+      socket.emit("errorMsg", "Sıra sana gelmedi");
+      return;
+    }
+
+    if (user.used) {
       socket.emit("errorMsg", "Sadece 1 kez yazabilirsin");
       return;
     }
 
     if (state.locked) return;
 
-    users[user].used = true;
+    user.used = true;
     state.locked = true;
+
+    const before = state.text;
+    const after = data.text;
 
     state.history.push({
       turn: state.turn,
-      before: state.text,
-      after: data.text
+      before,
+      after
     });
 
-    state.text = data.text;
+    state.text = after;
     state.turn++;
+
+    state.ai = aiAnalyze(before, after);
 
     io.emit("state", state);
 
     setTimeout(() => {
       state.locked = false;
       io.emit("state", state);
-    }, 500);
-
+    }, 400);
   });
 
 });
