@@ -21,70 +21,79 @@ let state = {
   ai: ""
 };
 
-let queue = [];
 let users = {};
+let queue = [];
 
 function aiAnalyze(before, after) {
-  if (!before) return "Başlangıç metni oluşturuldu.";
-  if (after.length > before.length) return "Anlam genişledi ve ifade zenginleşti.";
-  if (after.length < before.length) return "Metin sadeleşti ve yoğunluk azaldı.";
-  return "Anlam dönüşümü gerçekleşti.";
+  const responses = [
+    "Anlam genişledi, metin adeta nefes aldı 🌬️",
+    "Cümle evrim geçirdi, artık daha canlı 🧬",
+    "Bir kelime daha ekleseydik roman olurdu 📖",
+    "Metin sadeleşti, Zen seviyesine yaklaştı 🧘",
+    "Anlam kırıldı ama güzel kırıldı ✨",
+    "Bu değişim biraz ‘şiir modu’na kaymış 🎭",
+    "Dil bilimciler bunu görünce heyecanlanırdı 🤓",
+    "Anlam yön değiştirdi, rota şaştı ama eğlenceli 🚀",
+    "Metin artık daha agresif / daha yumuşak — denge bozuldu ⚖️"
+  ];
+
+  return responses[Math.floor(Math.random() * responses.length)];
 }
 
 io.on("connection", (socket) => {
 
+  // 🔥 OTOMATİK ID (artık QR buton yok)
+  const id = queue.length + 1;
+  queue.push(id);
+
+  users[socket.id] = {
+    id,
+    used: false
+  };
+
+  socket.emit("assignedID", id);
   socket.emit("state", state);
 
-  // 📲 QR giriş = otomatik ID
-  socket.on("qrJoin", () => {
-
-    const id = queue.length + 1;
-    queue.push(id);
-
-    users[socket.id] = {
-      id,
-      used: false
-    };
-
-    socket.emit("assignedID", id);
-  });
-
-  // 🎬 başlat
+  // START
   socket.on("start", (data) => {
+
+    if (!data.text || data.text.trim() === "") {
+      socket.emit("errorMsg", "⚠️ Etkinlik başlamadı: kelime girilmedi");
+      return;
+    }
+
     state = {
       text: data.text,
       turn: 1,
       max: 36,
       locked: false,
       history: [],
-      ai: ""
+      ai: "Etkinlik başladı 🚀"
     };
 
-    queue = [];
     users = {};
+    queue = [];
 
     io.emit("state", state);
   });
 
-  // ✍️ cevap
+  // UPDATE
   socket.on("update", (data) => {
 
     const user = users[socket.id];
     if (!user) return;
 
-    // 🔒 sıra kontrolü
-    if (user.id !== state.turn) {
-      socket.emit("errorMsg", "Sıra sana gelmedi");
-      return;
-    }
-
-    // 🔒 tek hak
-    if (user.used) {
-      socket.emit("errorMsg", "Cevap için yalnızca bir hakkın var");
-      return;
-    }
-
     if (state.locked) return;
+
+    if (user.used) {
+      socket.emit("errorMsg", "❌ Cevap gönderildi. Yalnızca 1 hakkın var.");
+      return;
+    }
+
+    if (user.id !== state.turn) {
+      socket.emit("errorMsg", "⛔ Sıra sende değil");
+      return;
+    }
 
     user.used = true;
     state.locked = true;
