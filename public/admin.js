@@ -1,15 +1,8 @@
 const socket = io();
 
-let state = {};
-
-socket.on("state", (data) => {
-  state = data;
-
+socket.on("state", (state) => {
   document.getElementById("state").innerHTML =
-    `Tur: ${state.turn} <br> Metin: ${state.text}`;
-
-  document.getElementById("ai").innerHTML =
-    `🧠 AI: ${state.ai}`;
+    `Tur: ${state.turn}<br>${state.text}`;
 });
 
 function start() {
