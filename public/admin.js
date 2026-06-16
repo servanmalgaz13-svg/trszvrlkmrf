@@ -5,8 +5,12 @@ socket.on("state", (state) => {
     `Tur: ${state.turn}<br>${state.text}`;
 });
 
+socket.on("errorMsg", (msg) => {
+  alert(msg);
+});
+
 function start() {
-  socket.emit("start", {
-    text: document.getElementById("startText").value
-  });
+  const text = document.getElementById("startText").value;
+
+  socket.emit("start", { text });
 }

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Katılımcı</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -10,14 +9,14 @@
 
 <h2>📘 Kelime Evrimi</h2>
 
-<button onclick="joinQR()">📲 QR ile Giriş</button>
-
-<h3 id="myID"></h3>
+<h3 id="idBox">ID atanıyor...</h3>
 
 <div id="info"></div>
 
 <input id="text">
 <button onclick="send()">Gönder</button>
+
+<div id="msg"></div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="client.js"></script>

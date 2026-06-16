@@ -8,7 +8,7 @@ socket.on("state", (state) => {
     "🧠 AI Analiz: " + state.ai;
 
   document.getElementById("historyBox").innerHTML =
-    state.history.slice(-8).map(h =>
+    state.history.slice(-10).map(h =>
       `🔵 ${h.turn}. ${h.before} → ${h.after}`
     ).join("<br>");
 });
