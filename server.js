@@ -8,17 +8,9 @@ const io = new Server(server);
 
 app.use(express.static("public"));
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
-});
-
-app.get("/admin", (req, res) => {
-  res.sendFile(__dirname + "/public/admin.html");
-});
-
-app.get("/present", (req, res) => {
-  res.sendFile(__dirname + "/public/present.html");
-});
+app.get("/", (req, res) => res.sendFile(__dirname + "/public/index.html"));
+app.get("/admin", (req, res) => res.sendFile(__dirname + "/public/admin.html"));
+app.get("/present", (req, res) => res.sendFile(__dirname + "/public/present.html"));
 
 let state = {
   text: "",
@@ -29,14 +21,13 @@ let state = {
   ai: ""
 };
 
-// QR → sıra ID üretir
 let queue = [];
 let users = {};
 
 function aiAnalyze(before, after) {
   if (!before) return "Başlangıç metni oluşturuldu.";
-  if (after.length > before.length) return "Anlam genişledi, ifade zenginleşti.";
-  if (after.length < before.length) return "Metin sadeleşti, yoğunluk azaldı.";
+  if (after.length > before.length) return "Anlam genişledi ve ifade zenginleşti.";
+  if (after.length < before.length) return "Metin sadeleşti ve yoğunluk azaldı.";
   return "Anlam dönüşümü gerçekleşti.";
 }
 
@@ -44,11 +35,12 @@ io.on("connection", (socket) => {
 
   socket.emit("state", state);
 
-  // QR giriş → otomatik ID
-  socket.on("joinQR", () => {
-    const id = queue.length + 1;
+  // 📲 QR giriş = otomatik ID
+  socket.on("qrJoin", () => {
 
+    const id = queue.length + 1;
     queue.push(id);
+
     users[socket.id] = {
       id,
       used: false
@@ -57,6 +49,7 @@ io.on("connection", (socket) => {
     socket.emit("assignedID", id);
   });
 
+  // 🎬 başlat
   socket.on("start", (data) => {
     state = {
       text: data.text,
@@ -73,19 +66,21 @@ io.on("connection", (socket) => {
     io.emit("state", state);
   });
 
+  // ✍️ cevap
   socket.on("update", (data) => {
 
     const user = users[socket.id];
     if (!user) return;
 
-    // sıra kontrolü
+    // 🔒 sıra kontrolü
     if (user.id !== state.turn) {
       socket.emit("errorMsg", "Sıra sana gelmedi");
       return;
     }
 
+    // 🔒 tek hak
     if (user.used) {
-      socket.emit("errorMsg", "Sadece 1 kez yazabilirsin");
+      socket.emit("errorMsg", "Cevap için yalnızca bir hakkın var");
       return;
     }
 
@@ -113,7 +108,7 @@ io.on("connection", (socket) => {
     setTimeout(() => {
       state.locked = false;
       io.emit("state", state);
-    }, 400);
+    }, 500);
   });
 
 });
