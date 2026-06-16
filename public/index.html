@@ -2,27 +2,23 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kelime Evrimi</title>
+<title>Katılımcı</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="top">
-  <h2>📘 Kelime Evrimi</h2>
-  <div id="info"></div>
-</div>
+<h2>Kelime Evrimi</h2>
 
-<div class="center">
-  <div id="bigText">Bekleniyor...</div>
-</div>
+<div id="info"></div>
 
-<div class="bottom">
-  <input id="text" disabled>
-  <button id="btn" onclick="send()" disabled>Gönder</button>
-</div>
+<input id="name" placeholder="İsmin">
+<button onclick="join()">Katıl</button>
 
-<div id="qr"></div>
+<br><br>
+
+<input id="text" disabled>
+<button id="btn" onclick="send()" disabled>Gönder</button>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="client.js"></script>
