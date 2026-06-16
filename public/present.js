@@ -4,12 +4,8 @@ socket.on("state", (state) => {
 
   document.getElementById("bigText").innerText = state.text;
 
-  document.getElementById("meta").innerText =
-    `Tur: ${state.turn}/${state.max}`;
-
-  document.getElementById("timeline").innerHTML =
-    state.history.slice(-5).map(h =>
-      `${h.before} → ${h.after}`
-    ).join("<br>");
-
+  document.getElementById("historyBox").innerHTML =
+    state.history.slice(-8).map(h =>
+      `<div>${h.turn}. ${h.before} → ${h.after}</div>`
+    ).join("");
 });

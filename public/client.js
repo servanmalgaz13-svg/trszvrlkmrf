@@ -1,10 +1,16 @@
 const socket = io();
-let state = {};
 
-function join() {
-  const name = document.getElementById("name").value;
-  socket.emit("join", name);
+let state = {};
+let myID = null;
+
+function joinQR() {
+  socket.emit("joinQR");
 }
+
+socket.on("assignedID", (id) => {
+  myID = id;
+  document.getElementById("myID").innerText = "ID: " + id;
+});
 
 socket.on("state", (data) => {
   state = data;
@@ -12,10 +18,7 @@ socket.on("state", (data) => {
   document.getElementById("info").innerText =
     `Tur: ${state.turn}/${state.max}`;
 
-  const enabled = !state.locked;
-
-  document.getElementById("text").disabled = !enabled;
-  document.getElementById("btn").disabled = !enabled;
+  document.getElementById("text").value = state.text;
 });
 
 function send() {

@@ -8,17 +8,16 @@
 
 <body>
 
-<h2>Kelime Evrimi</h2>
+<h2>📘 Kelime Evrimi</h2>
+
+<button onclick="joinQR()">📲 QR ile Giriş</button>
+
+<h3 id="myID"></h3>
 
 <div id="info"></div>
 
-<input id="name" placeholder="İsmin">
-<button onclick="join()">Katıl</button>
-
-<br><br>
-
-<input id="text" disabled>
-<button id="btn" onclick="send()" disabled>Gönder</button>
+<input id="text">
+<button onclick="send()">Gönder</button>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="client.js"></script>
