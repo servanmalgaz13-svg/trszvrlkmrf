@@ -2,13 +2,14 @@ const socket = io();
 
 socket.on("state", (state) => {
 
-  document.getElementById("bigText").innerText = state.text;
+  document.getElementById("main").innerHTML =
+    `<div class="mainWords">
+      ${state.words[0]} — ${state.words[1]}
+    </div>`;
 
-  document.getElementById("aiBox").innerText =
-    "🧠 AI Analiz: " + state.ai;
+  const cloud = document.getElementById("cloud");
 
-  document.getElementById("historyBox").innerHTML =
-    state.history.slice(-10).map(h =>
-      `🔵 ${h.turn}. ${h.before} → ${h.after}`
-    ).join("<br>");
+  cloud.innerHTML = state.inputs
+    .map(word => `<div class="word">${word}</div>`)
+    .join("");
 });

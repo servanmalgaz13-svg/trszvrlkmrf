@@ -5,14 +5,14 @@
 <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="center">
 
-<h2>Admin</h2>
+<h2>📌 Ana Kelimeleri Belirle</h2>
 
-<input id="startText">
-<button onclick="start()">Başlat</button>
+<input id="w1" placeholder="1. kelime">
+<input id="w2" placeholder="2. kelime">
 
-<div id="state"></div>
+<button onclick="setWords()">Başlat</button>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="admin.js"></script>

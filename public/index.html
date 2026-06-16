@@ -5,18 +5,14 @@
 <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="center">
 
-<h2>📘 Kelime Evrimi</h2>
+<h2>📘 Kelime Katılım Alanı</h2>
 
-<h3 id="idBox">ID atanıyor...</h3>
+<div id="words"></div>
 
-<div id="info"></div>
-
-<input id="text">
+<input id="text" placeholder="kelime / cümle">
 <button onclick="send()">Gönder</button>
-
-<div id="msg"></div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="client.js"></script>
