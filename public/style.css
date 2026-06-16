@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  background: radial-gradient(circle, #0f172a, #1e3c72);
+  color: white;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+#bigText {
+  font-size: 42px;
+  text-align: center;
+  padding: 25px;
+  max-width: 900px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 20px;
+  transition: 0.4s;
+}
+
+.bottom {
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+}
+
+input {
+  flex: 1;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+button {
+  padding: 15px;
+  background: #22c55e;
+  border: none;
+  color: white;
+  border-radius: 10px;
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<h2>📊 Canlı Dil Evrimi Analizi</h2>
+
+<input id="startText" placeholder="Başlangıç (kitap vb)">
+<button onclick="start()">Başlat</button>
+
+<div id="state"></div>
+
+<canvas id="chart"></canvas>
+
+<h3>🧠 AI Yorum</h3>
+<div id="ai"></div>
+
+<h3>📜 Timeline</h3>
+<div id="history"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="admin.js"></script>
+
+</body>
+</html>
